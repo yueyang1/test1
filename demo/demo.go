@@ -60,7 +60,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	if function == "init" {
 		return t.Init(stub, "init", args)
 	}
-	if function == "rechange" {
+	if function == "recharge" {
 		return t.recharge(stub, args)
 	}
 	if function == "change" {
@@ -264,13 +264,51 @@ func (t *SimpleChaincode) queryPoints(stub shim.ChaincodeStubInterface, args []s
 
 	jsonResp := "{\"user\":\"" + userId + "\",\"'s account points is \":\"" + string(val) + "\"}"
 	fmt.Printf("Query Response:%s\n", jsonResp)
-	return val, nil
+	return []byte(jsonResp), nil
 }
 
 func (t *SimpleChaincode) queryAll(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	t.queryBalance(stub, args)
-	t.queryBalance(stub, args)
-	return nil, nil
+	var userId string
+	var err error
+
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting userID of the user to query")
+	}
+	if len(args[0]) != 11 {
+		return nil, errors.New("First argument must be a 11-digit number")
+	}
+	
+	userId = args[0]
+
+	val1, err := stub.GetState(userId + "balance")
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get state for user " + userId + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	if val1 == nil {
+		jsonResp := "{\"Error\":\"Nil account balance for user " + userId + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	jsonResp1 := "{\"user\":\"" + userId + "\",\"'s account balance is \":\"" + string(val1) + "\"}"
+	fmt.Printf("Query Response:%s\n", jsonResp1)
+	
+	val2, err := stub.GetState(userId + "points")
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get state for user " + userId + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	if val2 == nil {
+		jsonResp := "{\"Error\":\"Nil account points for user " + userId + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	jsonResp2 := "{\"user\":\"" + userId + "\",\"'s account points is \":\"" + string(val2) + "\"}"
+	fmt.Printf("Query Response:%s\n", jsonResp2)
+	
+	return []byte(jsonResp1 + jsonResp2), nil
 }
 
 func main() {
