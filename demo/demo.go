@@ -229,8 +229,7 @@ func (t *SimpleChaincode) queryBalance(stub shim.ChaincodeStubInterface, args []
 	}
 
 	if val == nil {
-		jsonResp := "{\"Error\":\"Nil account balance for user " + userId + "\"}"
-		return nil, errors.New(jsonResp)
+		val = []byte("0.0")
 	}
 
 	jsonResp := "{\"user\":\"" + userId + "\",\"'s account balance is \":\"" + string(val) + "\"}"
@@ -258,8 +257,7 @@ func (t *SimpleChaincode) queryPoints(stub shim.ChaincodeStubInterface, args []s
 	}
 
 	if val == nil {
-		jsonResp := "{\"Error\":\"Nil account points for user " + userId + "\"}"
-		return nil, errors.New(jsonResp)
+		val = []byte("0")
 	}
 
 	jsonResp := "{\"user\":\"" + userId + "\",\"'s account points is \":\"" + string(val) + "\"}"
@@ -287,8 +285,7 @@ func (t *SimpleChaincode) queryAll(stub shim.ChaincodeStubInterface, args []stri
 	}
 
 	if val1 == nil {
-		jsonResp := "{\"Error\":\"Nil account balance for user " + userId + "\"}"
-		return nil, errors.New(jsonResp)
+		val1 = []byte("0.0")
 	}
 
 	jsonResp1 := "{\"user\":\"" + userId + "\",\"'s account balance is \":\"" + string(val1) + "\"}"
@@ -301,8 +298,7 @@ func (t *SimpleChaincode) queryAll(stub shim.ChaincodeStubInterface, args []stri
 	}
 
 	if val2 == nil {
-		jsonResp := "{\"Error\":\"Nil account points for user " + userId + "\"}"
-		return nil, errors.New(jsonResp)
+		val2 = []byte("0")
 	}
 
 	jsonResp2 := "{\"user\":\"" + userId + "\",\"'s account points is \":\"" + string(val2) + "\"}"
