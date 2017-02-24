@@ -128,7 +128,7 @@ func (t *SimpleChaincode) settle(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	val_settle, _ = strconv.ParseFloat(args[1], 64);
-	val_end = val_previous - val_settle
+	val_end = val_previous + val_settle
 	value = strconv.FormatFloat(val_end, 'f', 6, 64)
 	err = stub.PutState(userId + "balance", []byte(value))
 	if err != nil {
